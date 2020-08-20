@@ -1,12 +1,15 @@
 #include <iostream>
 #include <time.h>
 #include <vector>
+#include <fstream>
 using namespace std;
 int checkAttendance();
 int wageCalculator(int);
+void addEmployeeDataCSV();
 int wagePerHour = 20;
 const int totalWorkingDays = 20;
 const int totalWorkingHours = 100;
+vector<int> employeeWageMonth;
 
 int main()
 {
@@ -20,7 +23,6 @@ int main()
     int isFullTime = 2;
     int totalWorkingDays = 20;
     int employeeWage;
-    vector<int> employeeMonthlyWage;
     cout << "\n\n\n------------------------------------\n\n";
     cout << "\nWelcome to Employee Wage Problem\n"
          << endl;
@@ -54,19 +56,29 @@ int main()
             cout << "Employee is absent\n"
                  << endl;
         }
-        employeeMonthlyWage.push_back(employeeWage);
+        employeeWageMonth.push_back(employeeWage);
         workedDays++;
     }
     int days = 0;
-    for (int &wages : employeeMonthlyWage)
+    for (int &wages : employeeWageMonth)
     {
         days++;
         std::cout << "Day " << days << " - Wage : " << wages << "\n";
     }
+    addEmployeeDataCSV();
     return 0;
 }
 
 int wageCalculator(int hoursPassed)
 {
     return wagePerHour * hoursPassed;
+}
+
+void addEmployeeDataCSV() {
+    ofstream employeeFile;
+    employeeFile.open("EmployeeData.csv", ios::out | ios::app);
+    employeeFile << "Day" << ", " << "Wage" << endl;
+    for (int i = 0; i < employeeWageMonth.size(); i++){
+        employeeFile << (i + 1) << ", " << employeeWageMonth[i] << endl;
+    }
 }
