@@ -4,16 +4,32 @@
 #include <fstream>
 
 using namespace std;
-void writeEmployeeDataCSV();
-vector<int> monthlyWages;
+void writeEmployeeDataCSV(int);
+vector<int*> totalMonthlyWages;
 
-void writeEmployeeDataCSV() {
+void writeEmployeeDataCSV(int totalMonths) {
     ofstream employeeFile;
     employeeFile.open("EmployeeData.csv", ios::out | ios::trunc);
-    employeeFile << "Emp_ID" << ", " << "Montly_Wage" << endl;
-    for (int i = 0; i < monthlyWages.size(); i++){
-        employeeFile << "   " << (i + 1) << ", " << monthlyWages[i] << endl;
+    if (employeeFile.is_open())
+    {
+        employeeFile << "Employee";
+        for (int month = 0; month < totalMonths ;month++)
+        {
+            employeeFile << ", Month_" << month + 1;
+        }
+        int* arr;
+        for (int employee = 0; employee < totalMonthlyWages.size(); employee++)
+        {
+            employeeFile << "\nEmployee_" << (employee + 1);
+            arr = totalMonthlyWages[employee];
+            for (int month = 0; month < totalMonths; month++)
+            {
+                employeeFile << ", " << *arr++;
+            }
+             
+        }
     }
+    employeeFile.close();
 }
 
 int getEmployeeHours() {
@@ -55,12 +71,23 @@ int main()
     int totalEmployees;
     cout << "\nEnter total number of employees. \n";
     cin >> totalEmployees;
+    
+    int totalMonths;
+    cout << "\nEnter nunber of Months. \n";
+    cin >> totalMonths;
+    
     for (int i = 0; i < totalEmployees; i++)
     {
-        int empWage = getEmployeeHours() * EMP_RATE_PER_HOUR;
-        monthlyWages.push_back(empWage);
-        cout << "Monthly Wage for Employee " << (i + 1) << " = " << monthlyWages[i] << endl;
+        int* monthlyWages = new int[totalMonths];
+        for (int i = 0; i < totalMonths; i++)
+        {
+            int empWage = getEmployeeHours() * EMP_RATE_PER_HOUR;
+            monthlyWages[i] = empWage;
+            cout << "Monthly Wage for Employee_" << (i + 1) << " : "<<empWage<<endl;   
+        }
+        totalMonthlyWages.push_back(monthlyWages); 
+        
     }
-    writeEmployeeDataCSV();
+    writeEmployeeDataCSV(totalMonths);
     return 0;
 }
