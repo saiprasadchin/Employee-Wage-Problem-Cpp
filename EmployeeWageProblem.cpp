@@ -206,7 +206,25 @@ void selectCompany()
             break;
     }
 }
-
+bool compareDailyWages(EmployeeDaily* i1, EmployeeDaily* i2) 
+{ 
+    return ( i1->wage < i2->wage ); 
+}
+void sortByDailyWages()
+{
+    sort(dailyEmpList.begin(), dailyEmpList.end(), compareDailyWages);
+    cout<<"==================================="<<endl;
+    for (auto i = dailyEmpList.begin(); i != dailyEmpList.end(); ++i){
+        cout<<"Name        : "<<(*i)->empName <<endl;
+        cout<<"CompanyName : "<<(*i)->companyName <<endl;
+        cout<<"DayNo       : "<<(*i)->dayNo <<endl;
+        cout<<"WagePerHour : "<<(*i)->wagePerHour <<endl;
+        cout<<"Hours       : "<<(*i)->hours <<endl;
+        cout<<"Wage        : "<<(*i)->wage <<endl;
+        cout<<"MonthNo     : "<<(*i)->monthNo <<endl;
+        cout<<"==================================="<<endl;
+    }
+}
 
 int main()
 {
@@ -217,7 +235,7 @@ int main()
     while (endKey)
     {
         int choice = 0;
-        cout << "\n1) InsertEmployee \n2) Display \n3) Monthly Wages By Company \n4) Sort By Monthly Wages \n5) Employee Details By Wages \n6) Exit : ";
+        cout << "\n1) InsertEmployee \n2) Display \n3) Monthly Wages By Company \n4) Sort By daily Wages \n5) Sort By Monthly Wages \n6) Employee Details By Wages \n7) Exit : ";
         cin >> choice;
         switch (choice)
         {
@@ -231,12 +249,15 @@ int main()
                 //displayMonthlyWagesByCompany();
                 break;
             case 4:
-                //sortByMonthlyWages( monthlyEmpList );
+                sortByDailyWages();
                 break;
             case 5:
-                //getEmployeeDetailsByWages();
+                //sortByMonthlyWages( monthlyEmpList );
                 break;
             case 6:
+                //getEmployeeDetailsByWages();
+                break;
+            case 7:
                 endKey = false;
                 break;
             default:
