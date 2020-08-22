@@ -1,6 +1,3 @@
-Company Name;Employee, Month_1, Month_2, Month_3
-TATA, Employee_1, 480, 480
-TATA, Employee_2, 480, 560
-BIRLA, Employee_1, 700, 700, 800
-BIRLA, Employee_2, 700, 700, 700
-BIRLA, Employee_3, 800, 800, 700
+EmpName, totalHours, monthlyWage, wagePerHour, companyName, 
+sai, 56, 1120, 20, Jio
+as, 36, 720, 20, Jio

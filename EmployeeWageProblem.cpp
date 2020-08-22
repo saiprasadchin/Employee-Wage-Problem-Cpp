@@ -1,103 +1,123 @@
+
 #include <iostream>
 #include <time.h>
+#include <ctime>
+#include <list>
 #include <vector>
 #include <fstream>
+#include <bits/stdc++.h> 
+#include <algorithm>
+#include <unistd.h>
+using namespace std; 
+int static totalEmpHrs = 0;
+struct Company
+{
+    string companyName;
+    int wagePerHour;
+    int workingDays;
+    int maxHours;
+};
 
-using namespace std;
-void writeEmployeeDataCSV(int, string, int, vector<int>);
-vector<vector<int>> monthlyWage;
-int getEmployeeHours(struct CompanyEmpWage);
+struct EmployeeDaily
+{
+    string empName;
+    int dayNo;
+    int wagePerHour;
+    int hours;
+    int wage;
+    int monthNo;
+    string companyName;
+};
 
-void writeEmployeeDataCSV(int totalMonths, string companyName, int employee, vector<int> wages)
+struct EmployeeMonthly
+{
+    string empName;
+    int wagePerHour;
+    int totalHours;
+    int monthlyWage;
+    int monthNo;
+    string companyName;
+};
+
+Company Jio;
+Company Reliance;
+void registerCompany()
+{
+    Jio.companyName = "Jio";
+    Jio.maxHours = 130;
+    Jio.wagePerHour = 50;
+    Jio.workingDays = 5;
+
+    Reliance.companyName = "Reliance";
+    Reliance.maxHours = 100;
+    Reliance.wagePerHour = 30;
+    Reliance.workingDays = 7;
+}
+vector<EmployeeMonthly*> monthlyEmpList;
+vector<EmployeeDaily*> dailyEmpList;
+
+Company company;
+
+
+void writeEmployeeDataDailyCSV()
 {
     fstream employeeFile;
-    employeeFile.open("EmployeeData.csv", ios::out | ios::app);
-    employeeFile.seekg(0, ios::end);
+    employeeFile.open("EmpDailyData.csv", ios::out | ios::trunc);
     if (employeeFile.is_open())
     {
-        if (employeeFile.tellp() == 0)
-        {
-            employeeFile << "Company"
-                         << ", "
-                         << "ID"
-                         << ", ";
-
-            for (int month = 0; month < totalMonths; month++)
-            {
-                employeeFile << ", Month-" << (month + 1);
-            }
-        }
-        employeeFile.seekg(0, ios::beg);
-
-        employeeFile << "\n"
-                     << companyName;
-        employeeFile << ", Employee_" << (employee + 1);
-        for (int month = 0; month < totalMonths; month++)
-        {
-            employeeFile << ", " << wages[month];
-        }
+        for (auto i = dailyEmpList.begin(); i != dailyEmpList.end(); ++i){
+        employeeFile <<(*i)->empName;
+        employeeFile << ", "<<(*i)->dayNo;
+        employeeFile << ", "<<(*i)->wagePerHour;
+        employeeFile << ", "<<(*i)->hours;
+        employeeFile << ", "<<(*i)->wage;
+        employeeFile << ", "<<(*i)->monthNo;
+        employeeFile << ", "<<(*i)->companyName<<endl;
+    }
         cout << endl;
     }
     employeeFile.close();
 }
-
-struct CompanyEmpWage
+void writeEmployeeDataCSV()
 {
-    string companyName;
-    int numOfWorkingDays;
-    int maxHoursMonth;
-    int ratePerHour;
-
-public:
-    void setCompanyDetails(string companyName, int numOfWorkingDays, int maxHoursMonth, int ratePerHour)
+    fstream employeeFile;
+    employeeFile.open("EmpMonthlyData.csv", ios::out | ios::trunc);
+    if (employeeFile.is_open())
     {
-        this->companyName = companyName;
-        this->numOfWorkingDays = numOfWorkingDays;
-        this->maxHoursMonth = maxHoursMonth;
-        this->ratePerHour = ratePerHour;
+        employeeFile << "EmpName"
+                     << ", "
+                     << "totalHours"
+                     << ", "
+                     << "monthlyWage"
+                     << ", "
+                     << "wagePerHour"
+                     << ", "
+                     << "companyName"
+                     << ", "<<endl;
+        for (auto i = monthlyEmpList.begin(); i != monthlyEmpList.end(); ++i){
+        employeeFile <<(*i)->empName;
+        employeeFile << ", "<<(*i)->totalHours;
+        employeeFile << ", "<<(*i)->monthlyWage;
+        employeeFile << ", "<<(*i)->wagePerHour;
+        employeeFile << ", "<<(*i)->companyName<<endl;
     }
-};
-
-void companyWageDetails(struct CompanyEmpWage companyDetails)
+        cout << endl;
+    }
+    employeeFile.close();
+}
+int getMonthlyEmployeeHours()
 {
-    int EMP_RATE_PER_HOUR = companyDetails.ratePerHour;
-    int totalEmployees;
-    int totalMonths;
-    cout << "\nEnter total number of employees. \n";
-    cin >> totalEmployees;
-    cout << "\nEnter nunber of Months. \n";
-    cin >> totalMonths;
-    for (int employee = 0; employee < totalEmployees; employee++)
-    {
-        vector<int> monthWages;
-        for (int j = 0; j < totalMonths; j++)
-        {
-            int empWage = getEmployeeHours(companyDetails) * EMP_RATE_PER_HOUR;
-            monthWages.push_back(empWage);
-            cout << "Monthly Wage for Employee " << (employee + 1) << " = " << empWage << endl;
-        }
-        monthlyWage.push_back(monthWages);
-        writeEmployeeDataCSV(totalMonths, companyDetails.companyName, employee, monthWages);
-    }
+    return totalEmpHrs;
 }
 
-int getEmployeeHours(struct CompanyEmpWage company)
+int getDailyEmployeeHours()
 {
     const int IS_PART_TIME = 1;
     const int IS_FULL_TIME = 2;
-    int NUM_OF_WORKING_DAYS = company.numOfWorkingDays;
-    int MAX_HRS_IN_MONTH = company.ratePerHour;
-
     int empHrs = 0;
-    int totalEmpHrs = 0;
-    int totalWorkingDays = 0;
-
-    while (totalEmpHrs <= MAX_HRS_IN_MONTH && totalWorkingDays <= NUM_OF_WORKING_DAYS)
+    int empCheck = rand() % 3;
+    switch (empCheck)
     {
-        totalWorkingDays++;
-        int empCheck = rand() % 3;
-        switch (empCheck)
-        {
         case IS_PART_TIME:
             empHrs = 4;
             break;
@@ -107,46 +127,121 @@ int getEmployeeHours(struct CompanyEmpWage company)
         default:
             empHrs = 0;
             break;
-        }
-        totalEmpHrs += empHrs;
     }
-    return totalEmpHrs;
+    return empHrs;
 }
 
-int main()
+void employeeMonthly( Company company, string empName)
 {
-    srand(time(NULL));
-    struct CompanyEmpWage companyDetails;
-    string companyName;
-    int numOfWorkingDays;
-    int maxHoursMonth;
-    int ratePerHour;
-    bool endKey = true;
-    while (endKey)
+    EmployeeMonthly *emp;
+    emp = new EmployeeMonthly;
+    emp->empName = empName;
+    emp->totalHours = getMonthlyEmployeeHours();
+    emp->monthlyWage = emp->totalHours * company.wagePerHour;
+    emp->wagePerHour = company.wagePerHour;
+    emp->companyName = company.companyName;
+
+    monthlyEmpList.push_back(emp);
+    writeEmployeeDataCSV();
+}
+void employeeDaily( Company company)
+{
+    string empName;
+    cout << "Enter Employee name " << endl;
+    cin >> empName;
+
+    int NUM_OF_WORKING_DAYS = company.workingDays;
+    int MAX_HRS_IN_MONTH = company.maxHours;
+    totalEmpHrs = 0;
+    int totalWorkingDays = 0;
+
+    while ( totalEmpHrs <= MAX_HRS_IN_MONTH && totalWorkingDays < NUM_OF_WORKING_DAYS)
     {
-        int choice;
-        cout << "1: Enter company details 2: Exit" << endl;
-        cin >> choice;
-        switch (choice)
-        {
-        case 1:
-            cout << "Enter the name of the company " << endl;
-            cin >> companyName;
-            cout << "Number of working days" << endl;
-            cin >> numOfWorkingDays;
-            cout << "Enter maximum hours of work in a month " << endl;
-            cin >> maxHoursMonth;
-            cout << "Rate per hour" << endl;
-            cin >> ratePerHour;
-            companyDetails.setCompanyDetails(companyName, numOfWorkingDays, maxHoursMonth, ratePerHour);
-            companyWageDetails(companyDetails);
+        totalWorkingDays++;
+        EmployeeDaily *empDaily;
+        empDaily = new EmployeeDaily;
+        empDaily->empName = empName;
+        empDaily->dayNo = totalWorkingDays;
+        empDaily->hours = getDailyEmployeeHours();
+        empDaily->wage = empDaily->hours * company.wagePerHour;
+        empDaily->wagePerHour = company.wagePerHour;
+        empDaily->monthNo = 1;
+        empDaily->companyName = company.companyName;
+
+        dailyEmpList.push_back(empDaily);
+        totalEmpHrs += empDaily->hours;
+    }
+    employeeMonthly(company, empName);    
+    writeEmployeeDataDailyCSV();
+}
+
+void display()
+{
+    for (auto i = monthlyEmpList.begin(); i != monthlyEmpList.end(); ++i){
+        cout<<"Name        : "<<(*i)->empName <<endl;
+        cout<<"totalHours  : "<<(*i)->totalHours <<endl;
+        cout<<"monthlyWage : "<<(*i)->monthlyWage <<endl;
+        cout<<"wagePerHour : "<<(*i)->wagePerHour <<endl;
+        cout<<"companyName : "<<(*i)->companyName <<endl;
+        cout<<"==================================="<<endl;
+    }
+}
+
+void selectCompany()
+{
+    int selectCompanyName = 0;
+    cout<<"\nSeclec Company : ";
+    cout << "\n1) Jio \n2) Reliance : ";
+    cin >> selectCompanyName;
+    switch (selectCompanyName)
+    {
+        case 1: 
+            employeeDaily( Jio );
             break;
         case 2:
-            endKey = false;
+            employeeDaily( Reliance );
             break;
         default:
             cout << "Invalid Input" << endl;
             break;
+    }
+}
+
+
+int main()
+{
+    sleep(1.8);
+    srand(time(0));
+    registerCompany();
+    bool endKey = true;
+    while (endKey)
+    {
+        int choice = 0;
+        cout << "\n1) InsertEmployee \n2) Display \n3) Monthly Wages By Company \n4) Sort By Monthly Wages \n5) Employee Details By Wages \n6) Exit : ";
+        cin >> choice;
+        switch (choice)
+        {
+            case 1: 
+                selectCompany();
+                break;
+            case 2:
+                display();
+                break;
+            case 3:
+                //displayMonthlyWagesByCompany();
+                break;
+            case 4:
+                //sortByMonthlyWages( monthlyEmpList );
+                break;
+            case 5:
+                //getEmployeeDetailsByWages();
+                break;
+            case 6:
+                endKey = false;
+                break;
+            default:
+                cout << "Invalid Input" << endl;
+                break;
         }
     }
     return 0;
