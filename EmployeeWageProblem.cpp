@@ -297,7 +297,7 @@ int main()
                 sortByDailyWages();
                 break;
             case 5:
-                //sortByMonthlyWages( monthlyEmpList );
+                sortByMonthlyWages( monthlyEmpList );
                 break;
             case 6:
                 //getEmployeeDetailsByWages();
