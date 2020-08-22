@@ -206,8 +206,71 @@ void selectCompany()
             break;
     }
 }
+bool compareDailyWages(EmployeeDaily* i1, EmployeeDaily* i2) 
+{ 
+    return ( i1->wage < i2->wage ); 
+}
+void sortByDailyWages()
+{
+    sort(dailyEmpList.begin(), dailyEmpList.end(), compareDailyWages);
+    cout<<"==================================="<<endl;
+    for (auto i = dailyEmpList.begin(); i != dailyEmpList.end(); ++i){
+        cout<<"Name        : "<<(*i)->empName <<endl;
+        cout<<"CompanyName : "<<(*i)->companyName <<endl;
+        cout<<"DayNo       : "<<(*i)->dayNo <<endl;
+        cout<<"WagePerHour : "<<(*i)->wagePerHour <<endl;
+        cout<<"Hours       : "<<(*i)->hours <<endl;
+        cout<<"Wage        : "<<(*i)->wage <<endl;
+        cout<<"MonthNo     : "<<(*i)->monthNo <<endl;
+        cout<<"==================================="<<endl;
+    }
+}
+bool compare(EmployeeMonthly* i1, EmployeeMonthly* i2) 
+{ 
+    return ( i1->monthlyWage < i2->monthlyWage ); 
+}
+void sortByMonthlyWages( vector<EmployeeMonthly*> companyList)
+{
+    sort(companyList.begin(), companyList.end(), compare);
+    cout<<"==================================="<<endl;
+    for (auto i = companyList.begin(); i != companyList.end(); ++i){
+        cout<<"Name        : "<<(*i)->empName <<endl;
+        cout<<"totalHours  : "<<(*i)->totalHours <<endl;
+        cout<<"monthlyWage : "<<(*i)->monthlyWage <<endl;
+        cout<<"wagePerHour : "<<(*i)->wagePerHour <<endl;
+        cout<<"companyName : "<<(*i)->companyName <<endl;
+        cout<<"==================================="<<endl;
+    }
+}
+void filterByCompany( Company company )
+{
+    vector<EmployeeMonthly*> listByCompany;
+    for (auto i = monthlyEmpList.begin(); i != monthlyEmpList.end(); ++i){
+        if( (*i)->companyName == company.companyName )
+            listByCompany.push_back(*i);
+    }
+    sortByMonthlyWages( listByCompany );
+}
+void displayMonthlyWagesByCompany()
+{
+    int selectCompanyName = 0;
+    cout<<"\nSeclec Company : ";
+    cout << "\n1) Jio \n2) Reliance : ";
+    cin >> selectCompanyName;
+    switch (selectCompanyName)
+    {
+        case 1: 
+            filterByCompany( Jio );
+            break;
+        case 2:
+            filterByCompany( Reliance );
+            break;
+        default:
+            cout << "Invalid Input" << endl;
+            break;
+    }
 
-
+}
 int main()
 {
     sleep(1.8);
@@ -217,7 +280,7 @@ int main()
     while (endKey)
     {
         int choice = 0;
-        cout << "\n1) InsertEmployee \n2) Display \n3) Monthly Wages By Company \n4) Sort By Monthly Wages \n5) Employee Details By Wages \n6) Exit : ";
+        cout << "\n1) InsertEmployee \n2) Display \n3) Monthly Wages By Company \n4) Sort By daily Wages \n5) Sort By Monthly Wages \n6) Employee Details By Wages \n7) Exit : ";
         cin >> choice;
         switch (choice)
         {
@@ -228,15 +291,18 @@ int main()
                 display();
                 break;
             case 3:
-                //displayMonthlyWagesByCompany();
+                displayMonthlyWagesByCompany();
                 break;
             case 4:
-                //sortByMonthlyWages( monthlyEmpList );
+                sortByDailyWages();
                 break;
             case 5:
-                //getEmployeeDetailsByWages();
+                //sortByMonthlyWages( monthlyEmpList );
                 break;
             case 6:
+                //getEmployeeDetailsByWages();
+                break;
+            case 7:
                 endKey = false;
                 break;
             default:
