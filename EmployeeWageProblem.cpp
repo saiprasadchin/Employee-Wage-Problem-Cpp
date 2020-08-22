@@ -271,6 +271,28 @@ void displayMonthlyWagesByCompany()
     }
 
 }
+void getEmployeeDetailsByWages()
+{
+    int wage = 0;
+    cout << "Enter wage " << endl;
+    cin >> wage;
+    bool block = 0;
+    vector<EmployeeMonthly*> listByWage;
+    for (auto i = monthlyEmpList.begin(); i != monthlyEmpList.end(); ++i){
+        if( (*i)->wagePerHour == wage )
+        {
+            listByWage.push_back(*i);
+            block = 1;
+        }
+    }
+    for (auto i = listByWage.begin(); i != listByWage.end(); ++i){
+        cout<<"Name        : "<<(*i)->empName <<endl;
+        cout<<"wagePerHour : "<<(*i)->wagePerHour <<endl;
+        cout<<"==================================="<<endl;
+    }
+    if ( block = 0 )
+        cout <<"\nNo such record found\n";    
+}
 int main()
 {
     sleep(1.8);
@@ -300,7 +322,7 @@ int main()
                 sortByMonthlyWages( monthlyEmpList );
                 break;
             case 6:
-                //getEmployeeDetailsByWages();
+                getEmployeeDetailsByWages();
                 break;
             case 7:
                 endKey = false;
